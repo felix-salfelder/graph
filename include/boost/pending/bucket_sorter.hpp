@@ -78,13 +78,27 @@ namespace boost {
     public:
       stack(bucket_type _bucket_id, typename Iter::value_type* h,
             Iter n, Iter p, IndexValueMap v, const ValueIndexMap& _id)
-      : bucket_id(_bucket_id), head(h), next(n), prev(p), value(v), id(_id) {}
+      : bucket_id(_bucket_id), head(), next(), prev(), value(v), id(_id)
+      {
+        // APPLE/CLANG workaround: avoid constructors, assign instead
+        // it should make no difference on working platforms
+        head = h;
+        next = n;
+        prev = p;
+      }
 
       // Avoid using default arg for ValueIndexMap so that the default
       // constructor of the ValueIndexMap is not required if not used.
       stack(bucket_type _bucket_id, typename Iter::value_type* h,
             Iter n, Iter p, IndexValueMap v)
-        : bucket_id(_bucket_id), head(h), next(n), prev(p), value(v) {}
+        : bucket_id(_bucket_id), head(), next(), prev(), value(v)
+      {
+        // APPLE/CLANG workaround: avoid constructors, assign instead
+        // it should make no difference on working platforms
+        head = h;
+        next = n;
+        prev = p;
+      }
       
       void push(const value_type& x) {
         const size_type new_head = get(id, x);
